@@ -183,9 +183,10 @@ router.post('/device/:device_id', async (req, res, next) => {
     if (result.length <= 0) {
       return res.status(404).send({ message: 'device not found!' })
     }
-    await query(
-      `INSERT INTO user_device (usasdaser, device_id, device_name, abstract, sleepTime1, sleepHours1) VALUES ("${req.body.user}","${req.params.device_id}","${result[0].name}", "${result[0].abstract}",${result[0].sleepTime1 ? '"' + result[0].sleepTime1 + '"' : null}, ${result[0].sleepHours1 ? '"' + result[0].sleepHours1 + '"' : null})`,
-    )
+
+    // await query(
+    //   `INSERT INTO user_device (usasdaser, device_id, device_name, abstract, sleepTime1, sleepHours1) VALUES ("${req.body.user}","${req.params.device_id}","${result[0].name}", "${result[0].abstract}",${result[0].sleepTime1 ? '"' + result[0].sleepTime1 + '"' : null}, ${result[0].sleepHours1 ? '"' + result[0].sleepHours1 + '"' : null})`,
+    // )
 
     res.send({
       error: false,

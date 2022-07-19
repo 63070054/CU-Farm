@@ -64,6 +64,7 @@ function Notifications(props) {
       setSensors(response.data.data.sensor)
       setRelays(response.data.data.relay)
       setAddDevice(true)
+      setError(false)
       //
     } else {
       setError(true)
@@ -160,7 +161,7 @@ function Notifications(props) {
                       รหัสอุปกรณ์ของกล่อง{" "}
                     </MDTypography>
                     <MDBox mb={4}>
-                      <MDInput type="text" label="กรุณาใส่รหัสอุปกรณ์ของกล่อง" variant="standard" fullWidth />
+                      <MDInput type="text" value={props.deviceStore.deviceID} label="กรุณาใส่รหัสอุปกรณ์ของกล่อง" variant="standard" fullWidth />
                     </MDBox>
                     <MDTypography display="block" variant="button" color="ิblack">
                       ชื่อกล่องอุปกรณ์{" "}
@@ -257,7 +258,7 @@ function Notifications(props) {
                         รหัสอุปกรณ์ของกล่อง{" "}
                       </MDTypography>
                       <MDBox mb={4}>
-                        <MDInput type="text" label="กรุณาใส่รหัสอุปกรณ์ของกล่อง" variant="standard" fullWidth onChange={handleSetDeviceID} />
+                        <MDInput type="text" value={props.deviceStore.deviceID} label="กรุณาใส่รหัสอุปกรณ์ของกล่อง" variant="standard" fullWidth onChange={handleSetDeviceID} />
                       </MDBox>
                       <MDBox mt={6} mb={1}>
                         <MDButton variant="gradient" color="info" fullWidth onClick={handleAddDevice}>
