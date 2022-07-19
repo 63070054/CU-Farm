@@ -34,6 +34,9 @@ import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
 import barData from "layouts/dashboard/data/barData";
 import { useEffect, useState } from "react";
 import moment from 'moment';
+import auth from "../../utilis/auth"
+import { observer, inject } from "mobx-react";
+import { useNavigate } from "react-router-dom";
 
 // Dashboard components
 import Projects from "layouts/dashboard/components/Projects";
@@ -42,48 +45,62 @@ import ReactApexChart from 'react-apexcharts'
 import React, { Component } from 'react';
 
 function ApexChart(props) {
+  const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
+  useEffect(async () => {
+    await generateRelay()
   }, [])
 
-  const generateRelay = () => {
-    const result = location.state.relay.map(relay => ({
-      x: `${relay.name}`,
-      y: [
-        new Date(relay.timeStart).getTime(),
+  const generateRelay = async () => {
+    let series = [{
+      data: []
+    }]
+    let count = 0
+    location.state.relay.map(relay => {
+      count += 1
+      series = [{
+        data: [...series[0].data, {
+          x: relay.name,
+          // y: [new Date(relay.timeStart).getTime() || 2 + count, new Date(relay.timeStop).getTime() || 11 + count/5]
+          y: [new Date(relay.timeStart).getTime() || 0, new Date(relay.timeStop).getTime() || 0]
+        }]
+      }]
+    }
+    )
 
-        // new Date('2019-03-05').getTime(),
-        // new Date('2019-04-05').getTime()
-        new Date(relay.timeStop).getTime(),
+    setRelaySeries(series)
 
-        // moment(relay.timeStop).toDate().getTime(),
-      ]
-    }))
-
-    return ({
-      series: [{ data: result }]
-    })
   }
 
   const [relayOption, setRelayOption] = useState({
     options: {
       chart: {
+        type: 'rangeBar',
         height: 350,
-        type: 'rangeBar'
       },
       plotOptions: {
         bar: {
           horizontal: true
         }
       },
-      xaxis: {
-        type: 'datetime'
+      dataLabels: {
+        enabled: false
       }
     }
   })
 
-  const [relaySeries, setRelaySeries] = useState(generateRelay().series)
+  const [relaySeries, setRelaySeries] = useState([])
+
+  const { user_device } = props.authStore.toJS();
+
+  if (!user_device.device) {
+
+    auth.signOutAndClear();
+    navigate("/authentication/sign-in")
+    return false
+  };
+
   return (
 
     <DashboardLayout>
@@ -95,4 +112,4 @@ function ApexChart(props) {
 
 }
 
-export default ApexChart;
+export default inject("authStore")(observer(ApexChart));

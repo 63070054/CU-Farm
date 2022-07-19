@@ -29,6 +29,7 @@ import { observer, inject } from "mobx-react";
 import { useEffect, useState } from "react";
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import _ from 'lodash';
 function Notifications(props) {
   const navigate = useNavigate();
@@ -45,6 +46,7 @@ function Notifications(props) {
   const handleSetDeviceID = (e) => {
 
     props.deviceStore.setDeviceID(e.target.value);
+
   };
 
   const handleFormChange = (event, index) => {
@@ -56,6 +58,7 @@ function Notifications(props) {
   const handleAddDevice = async () => {
     const { user } = auth.getUserInfo();
     const response = await props.deviceStore.getUserDeviceByID(user);
+
 
     if (response.status === 200) {
       setSensors(response.data.data.sensor)
@@ -70,7 +73,7 @@ function Notifications(props) {
 
   const alertContent = (name) => (
     <MDTypography variant="body2" color="white">
-      ไม่พบอุปกรณ์ กรุณาเพิ่มอุปกรณ์ใหม่อีกครั้ง
+      {name} ไม่พบอุปกรณ์ กรุณาเพิ่มอุปกรณ์ใหม่อีกครั้ง
     </MDTypography>
   );
 
@@ -106,13 +109,22 @@ function Notifications(props) {
     setFormFields(data)
   }
 
+  const { user_device } = props.authStore.toJS();
 
+  if (!user_device.device) {
 
+    auth.signOutAndClear();
+    navigate("/authentication/sign-in")
+    return false
+  };
+
+  console.log(user_device.user.ID)
 
 
   return (
     <DashboardLayout>
-      {error && <MDAlert color="error" dismissible>
+      <DashboardNavbar></DashboardNavbar>
+      {error && <MDAlert color="error" dismissible onClose={() => { console.log('kuy') }}>
         {alertContent("error")}
       </MDAlert>}
 
@@ -139,7 +151,7 @@ function Notifications(props) {
                     เพิ่มกล่องอุปกรณ์
                   </MDTypography>
                   <MDTypography display="block" variant="button" color="white" my={1}>
-                    รหัสบัตรประชาชนของคุณ :{" "}
+                    รหัสบัตรประชาชนของคุณ {user_device.user.ID}
                   </MDTypography>
                 </MDBox>
                 <MDBox pt={4} pb={3} px={3}>
@@ -162,7 +174,7 @@ function Notifications(props) {
                     <MDBox mb={4}>
                       <MDInput type="text" label="กรุณาใส่รหัสอุปกรณ์ของกล่อง" variant="standard" fullWidth />
                     </MDBox>
-                    <MDTypography mb={2} display="block" display="block" variant="h6" fontWeight="medium" color="ิblack">
+                    <MDTypography mb={2} display="block" variant="h6" fontWeight="medium" color="ิblack">
                       Relays ที่พบในอุปกรณ์ {relays.length}
                     </MDTypography>
                     {relays.map((data, index) => {
@@ -236,7 +248,7 @@ function Notifications(props) {
                       เพิ่มกล่องอุปกรณ์
                     </MDTypography>
                     <MDTypography display="block" variant="button" color="white" my={1}>
-                      รหัสบัตรประชาชนของคุณ :{" "}
+                      รหัสบัตรประชาชนของคุณ {user_device.user.ID}
                     </MDTypography>
                   </MDBox>
                   <MDBox pt={4} pb={3} px={3}>
@@ -264,6 +276,6 @@ function Notifications(props) {
   );
 }
 
-export default inject("deviceStore")(observer(Notifications));
+export default inject("authStore", "deviceStore")(observer(Notifications));
 
 

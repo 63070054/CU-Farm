@@ -106,11 +106,12 @@ function Dashboard(props) {
   const { user_device } = props.authStore.toJS();
   const { model_soil } = props.modelSoilStore.toJS();
   const { listDevice } = props.deviceStore.toJS();
+
   if (!user_device.device) {
 
     auth.signOutAndClear();
     navigate("/authentication/sign-in")
-    return (<><div>test</div></>);
+    return false
   };
 
   return (
@@ -124,7 +125,7 @@ function Dashboard(props) {
           {user_device.device && (user_device.device).map((customer, index) => (
             // {isLoggedIn ? <button>Logout</button> : <button>Login</button>}
 
-            <Grid item xs={12} md={6} lg={3} >
+            <Grid item xs={12} md={6} lg={3} key={index}>
               <MDBox m={3}>
                 <ComplexStatisticsCard
                   color="dark"

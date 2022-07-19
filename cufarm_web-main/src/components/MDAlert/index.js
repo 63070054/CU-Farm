@@ -46,7 +46,7 @@ function MDAlert({ color, dismissible, children, ...rest }) {
       </MDAlertRoot>
     </Fade>
   );
-
+          
   switch (true) {
     case alertStatus === "mount":
       return alertTemplate();

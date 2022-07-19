@@ -94,8 +94,10 @@ function DashboardUser(props) {
 
 
   if (!user_device.device) {
+
     auth.signOutAndClear();
     navigate("/authentication/sign-in")
+    return (<></>);
   };
 
   return (

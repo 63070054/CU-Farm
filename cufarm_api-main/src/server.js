@@ -167,9 +167,11 @@ router.post('/device/:device_id', async (req, res, next) => {
     const result = await query(
       `SELECT * from device where device_id='${req.params.device_id}'`,
     )
+
     const relay = await query(
       `SELECT * from relay where device_id='${req.params.device_id}'`,
     )
+
     // const sensor = await client.query(
     //   `SELECT * from iotdata where deviceid='${req.params.device_id}' limit 1`,
     // )
@@ -182,8 +184,9 @@ router.post('/device/:device_id', async (req, res, next) => {
       return res.status(404).send({ message: 'device not found!' })
     }
     await query(
-      `INSERT INTO user_device (id,user, device_id, device_name, abstract, sleepTime1, sleepHours1) VALUES ("${id}","${req.body.user}","${req.params.device_id}","${result[0].name}", "${result[0].abstract}",${result[0].sleepTime1 ? '"' + result[0].sleepTime1 + '"' : null}, ${result[0].sleepHours1 ? '"' + result[0].sleepHours1 + '"' : null})`,
+      `INSERT INTO user_device (usasdaser, device_id, device_name, abstract, sleepTime1, sleepHours1) VALUES ("${req.body.user}","${req.params.device_id}","${result[0].name}", "${result[0].abstract}",${result[0].sleepTime1 ? '"' + result[0].sleepTime1 + '"' : null}, ${result[0].sleepHours1 ? '"' + result[0].sleepHours1 + '"' : null})`,
     )
+
     res.send({
       error: false,
       data: { data: result[0], relay: relay, sensor: sensor },

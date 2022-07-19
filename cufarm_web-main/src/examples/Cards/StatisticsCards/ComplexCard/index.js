@@ -205,12 +205,6 @@ function ComplexCard({ color }) {
 
   const handleCallbackModalRelay = async (childData) => {
     handleCloseRelay()
-
-
-    const newRelay = [...relayState]
-    newRelay[childData.relay_id - 1].name = childData.name;
-    newRelay[childData.relay_id - 1].abstract = childData.abstract;
-    setRelayState(newRelay)
     try {
 
       const response = await axios.put(`${config.backendUrl}/editRelay/${childData.device_id}`,
@@ -218,6 +212,15 @@ function ComplexCard({ color }) {
       );
 
       if (response.status === 200) {
+
+        let newRelayArr = [...relayState]
+
+        let editedRelay = newRelayArr.find(relay => relay.relay_id === childData.relay_id)
+        editedRelay.name = childData.name
+        editedRelay.abstract = childData.abstract
+
+        setRelayState(newRelayArr)
+
         await Swal.fire("Success", "edit relay success", "success");
 
       }

@@ -155,22 +155,19 @@ export class AuthStore extends BaseStore {
         birthdate: this.birthdate,
       });
 
-      const { data, status } = response;
 
-      const deviceData = data;
-      deviceData.device = deviceData.device.map(val => {
-        return {
-          ...val, isExpand: false, relays: val.relays.map(relay => ({
-            ...relay, timeStart: relay.timeStart, timeStop: relay.timeStop, criteriaTopic: "", criteriaCondition: "", criteriaValue: "", formFields: [{ timeStart: new Date(), timeStop: new Date(), criteriaTopic: "", criteriaCondition: "", criteriaValue: "" }]
-          }))
-        }
-      });
-
-
-
-
-      if (status === 200) {
+      if (response.status === 200) {
         runInAction(() => {
+          const { data, status } = response;
+
+          const deviceData = data;
+          deviceData.device = deviceData.device.map(val => {
+            return {
+              ...val, isExpand: false, relays: val.relays.map(relay => ({
+                ...relay, timeStart: relay.timeStart, timeStop: relay.timeStop, criteriaTopic: "", criteriaCondition: "", criteriaValue: "", formFields: [{ timeStart: new Date(), timeStop: new Date(), criteriaTopic: "", criteriaCondition: "", criteriaValue: "" }]
+              }))
+            }
+          });
           this.user_device = deviceData
 
           auth.signIn(deviceData.token, deviceData.user);
@@ -185,7 +182,7 @@ export class AuthStore extends BaseStore {
 
       //}
     } catch (err) {
-      return err?.response?.data?.message;
+      return err;
     } finally {
       this.Loading = false;
     }

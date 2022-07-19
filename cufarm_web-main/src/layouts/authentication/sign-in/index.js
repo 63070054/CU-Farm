@@ -42,6 +42,7 @@ import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 import { observer, inject } from 'mobx-react';
 import { useEffect, useState } from 'react';
 import auth from "utilis/auth";
+import Swal from "sweetalert2";
 import { useNavigate, Link } from "react-router-dom";
 
 
@@ -60,10 +61,12 @@ function Basic(props) {
   };
 
   const handleLogin = async () => {
-    const { status } = await props.authStore.login();
+    const response  = await props.authStore.login();
 
-    if (status === 200) {
+    if (response.status === 200) {
       navigate("/dashboard")
+    } else {
+      await Swal.fire("Error", "ไม่พบผู้ใช้งานนี้", "error");
     }
   };
 

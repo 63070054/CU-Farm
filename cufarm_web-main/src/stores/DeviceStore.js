@@ -45,6 +45,7 @@ export class DeviceStore extends BaseStore {
     this.deviceID = device_id;
 
   }
+  
 
   async getAllUserDevice() {
     try {
@@ -81,7 +82,6 @@ export class DeviceStore extends BaseStore {
       }
       return response;
     } catch (err) {
-
     }
   }
 
@@ -118,7 +118,7 @@ export class DeviceStore extends BaseStore {
       }
       return response.status;
     } catch (err) {
-
+      return err
     } finally {
       this.setLoading(false);
     }
@@ -128,10 +128,14 @@ export class DeviceStore extends BaseStore {
     try {
 
       this.setLoading(true);
+      console.log(user)
+      console.log(this.deviceID)
       const response = await axios.post(`${config.backendUrl}/device/${this.deviceID}`, {
         user: user,
       });
       const { data } = response;
+
+      console.log('data', data)
 
       if (response.status === 200) {
         runInAction(() => {
@@ -153,7 +157,7 @@ export class DeviceStore extends BaseStore {
       }
       return response;
     } catch (err) {
-
+      return err
     } finally {
       this.setLoading(false);
     }

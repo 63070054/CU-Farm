@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Papa from "papaparse";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
+import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import MDButton from "components/MDButton";
 import { observer, inject } from 'mobx-react';
 import "./rec.css";
@@ -49,6 +50,7 @@ function Recommend() {
 
   return (
     <DashboardLayout>
+      <DashboardNavbar></DashboardNavbar>
       <div>
         {/* File Uploader */}
         <input
