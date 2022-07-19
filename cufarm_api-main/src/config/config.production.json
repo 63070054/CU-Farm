@@ -1,0 +1,10 @@
+{
+  "mysql" : {
+    "type": "mysql",
+      "host": "localhost",
+      "port": 3306,
+      "user": "cufarm",
+      "password": "cufarm!23",
+      "database": "cufarm"
+  }
+}
