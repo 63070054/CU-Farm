@@ -55,6 +55,8 @@ function ApexChart(props) {
   const generateRelay = async () => {
     let series = [{
       data: []
+    }, {
+      data: []
     }]
     let count = 0
     location.state.relay.map(relay => {
@@ -65,7 +67,12 @@ function ApexChart(props) {
           y: [new Date(relay.timeStart).getTime() || 2 + count, new Date(relay.timeStop).getTime() || 11 + count/5]
           // y: [new Date(relay.timeStart).getTime() || 0, new Date(relay.timeStop).getTime() || 0]
         }]
-      }]
+      }, {
+          data: [...series[1].data, {
+            x: relay.name,
+            y: [new Date(relay.timeStart).getTime() || 1 + count, new Date(relay.timeStop).getTime() || 11 + count / 8]
+          }]
+        }]
     }
     )
 
@@ -86,7 +93,7 @@ function ApexChart(props) {
       },
       dataLabels: {
         enabled: false
-      }
+      },
     }
   })
 
