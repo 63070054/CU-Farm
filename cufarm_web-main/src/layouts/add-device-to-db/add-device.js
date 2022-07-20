@@ -32,6 +32,7 @@ import { observer, inject } from "mobx-react";
 // Authentication layout components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import auth from "../../utilis/auth"
 
 // Images
 import bgImage from "assets/images/bg-sign-up-cover.jpeg";
@@ -109,6 +110,15 @@ function Cover(props) {
 
 
   }
+
+  const { user_device } = props.authStore.toJS();
+
+  if (!user_device.device) {
+
+    auth.signOutAndClear();
+    navigate("/authentication/sign-in")
+    return false
+  };
 
   return (
     <DashboardLayout>
@@ -262,4 +272,4 @@ function Cover(props) {
 
   );
 }
-export default inject("deviceStore")(observer(Cover));
+export default inject("deviceStore", "authStore")(observer(Cover));

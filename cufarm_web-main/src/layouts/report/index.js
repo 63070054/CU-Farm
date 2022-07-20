@@ -64,15 +64,15 @@ function ApexChart(props) {
       series = [{
         data: [...series[0].data, {
           x: relay.name,
-          y: [new Date(relay.timeStart).getTime() || 2 + count, new Date(relay.timeStop).getTime() || 11 + count/5]
+          y: [new Date(relay.timeStart).getTime() || 2 + count, new Date(relay.timeStop).getTime() || 11 + count / 5]
           // y: [new Date(relay.timeStart).getTime() || 0, new Date(relay.timeStop).getTime() || 0]
         }]
       }, {
-          data: [...series[1].data, {
-            x: relay.name,
-            y: [new Date(relay.timeStart).getTime() || 1 + count, new Date(relay.timeStop).getTime() || 11 + count / 8]
-          }]
+        data: [...series[1].data, {
+          x: relay.name,
+          y: [new Date(relay.timeStart).getTime() || 1 + count, new Date(relay.timeStop).getTime() || 11 + count / 8]
         }]
+      }]
     }
     )
 

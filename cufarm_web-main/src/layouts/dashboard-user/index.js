@@ -22,6 +22,7 @@ import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { useNavigate, useLocation } from "react-router-dom";
 import auth from "../../utilis/auth"
+import Map from "../map"
 
 function DashboardUser(props) {
   const location = useLocation();
@@ -54,6 +55,7 @@ function DashboardUser(props) {
     const status = await props.deviceStore.removeUserDevice(device_id);
     if (status === 200) {
       const { user_device } = props.authStore.toJS();
+
 
       await props.authStore.login(user_device.user.ID, user_device.user.birth)
 
@@ -90,8 +92,8 @@ function DashboardUser(props) {
   }
 
   const { relay_auto } = props.relayStore.toJS();
-  const { user_device } = props.userStore.toJS();
 
+  const { user_device } = props.authStore.toJS();
 
   if (!user_device.device) {
 
@@ -100,20 +102,21 @@ function DashboardUser(props) {
     return (<></>);
   };
 
+  console.log(user_device.device)
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
 
-      <MDBox py={3}>
+      <MDBox py={1} >
         <Map map={user_device.device} />
         <Grid container spacing={3}>
           {user_device.device && (user_device.device).map((customer, index) => (
             // {isLoggedIn ? <button>Logout</button> : <button>Login</button>}
 
-            <Grid item xs={12} md={6} lg={3} >
-              <MDBox mb={1.5}>
+            <Grid item xs={12} md={6} lg={3} key={index}>
+              <MDBox m={3}>
                 <ComplexStatisticsCard
-
                   color="dark"
                   icon="weekend"
                   title={customer.device.device_name}
@@ -140,4 +143,4 @@ function DashboardUser(props) {
     </DashboardLayout>
   );
 }
-export default inject("deviceStore", "relayStore", "userStore")(observer(DashboardUser));
+export default inject("deviceStore", "relayStore", "userStore", "authStore")(observer(DashboardUser));

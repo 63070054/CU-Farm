@@ -182,7 +182,8 @@ export class AuthStore extends BaseStore {
 
       //}
     } catch (err) {
-      return err;
+      console.log('err', err.response.data.msg)
+      return err.response.data.msg;
     } finally {
       this.Loading = false;
     }

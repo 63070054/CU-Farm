@@ -477,33 +477,35 @@ router.post('/user', (req, res, next) => {
 
 router.post('/register', signupValidation, (req, res, next) => {
 
+  console.log(req.body)
+
   dbConn.query(
     `SELECT * FROM user WHERE ID = (${req.body.ID});`,
     (err, result) => {
-      if (err) {
-        return res.status(409).send({
-          msg: err,
+      if (err || result.length != 0) {
+        console.log('result', result,'err', err)
+        return res.status(500).send({
+          msg: "มีผู้ใช้งานนี้ในระบบอยู่แล้ว",
         })
       } else {
         // username is available
         bcrypt.hash(req.body.password, 10, (err, hash) => {
           if (err) {
             return res.status(500).send({
-              msg: err,
+              msg: "Error",
             })
           } else {
             // has hashed pw => add to database , ${db.escape(hash)})
 
             dbConn.query(
-              `INSERT INTO user (user, birth, name, address, email,ID, tel)  VALUES ('${req.body.users}','${req.body.birth}','${req.body.name}','${req.body.address}', '${req.body.email}','${req.body.ID}','${req.body.tel}')`,
+              `INSERT INTO user (user, birth, name, address, email,ID, tel)  VALUES ('${req.body.user}','${req.body.birth}','${req.body.name}','${req.body.address}', '${req.body.email}','${req.body.ID}','${req.body.tel}')`,
               (err, result) => {
                 if (err) {
-                  throw err
                   return res.status(400).send({
-                    msg: err,
+                    msg: "Error",
                   })
                 }
-                return res.status(201).send({
+                return res.status(200).send({
                   msg: 'The user has been registerd with us!',
                 })
               },
@@ -516,7 +518,6 @@ router.post('/register', signupValidation, (req, res, next) => {
 })
 
 router.post('/login', loginValidation, async (req, res, next) => {
-
   const result = await query(
     `SELECT * FROM user WHERE ID = '${req.body.citizenID}'`,
   )
@@ -547,21 +548,6 @@ router.post('/login', loginValidation, async (req, res, next) => {
   )).map(row => `'${row.device_id}'`)
 
   const deviceIdflat = listDeviceId.join(',')
-
-  /**
-   * device:
-        abstract: "สวนจุฬา100ปี โครงการ วช. "
-        date_update: "2022-04-17T09:51:00.000Z"
-        device_id: "CU100Park_SoilStation5"
-        device_name: "จุดวัดความชื้นดิน"
-        id: "71aae6a0-ddff-4dfa-889d-da061116e92f"
-        lat: "13.73925310"
-        lon: "100.52460944"
-        sleepHours1: 6
-        sleepHours2: 9
-        sleepTime1: "23:00:00"
-        sleepTime2: "23:00:00"
-   */
   const devices = (await query(
     `SELECT * from device where device_id IN (${deviceIdflat})`,
   )).map(row => ({

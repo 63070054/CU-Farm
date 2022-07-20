@@ -95,6 +95,16 @@ function listDevice(props) {
 
     }
   }
+
+  const { user_device } = props.authStore.toJS();
+
+  if (!user_device.device) {
+
+    auth.signOutAndClear();
+    navigate("/authentication/sign-in")
+    return false
+  };
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -209,4 +219,4 @@ listDevice.propTypes = {
   icon: PropTypes.node.isRequired,
 };
 
-export default inject("deviceStore")(observer(listDevice));
+export default inject("deviceStore", "authStore")(observer(listDevice));

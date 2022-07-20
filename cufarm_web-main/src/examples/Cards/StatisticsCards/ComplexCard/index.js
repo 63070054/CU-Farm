@@ -66,8 +66,10 @@ import EditModalRelay from 'layouts/edit-modal-relay'
 import EditModalSensor from 'layouts/edit-modal-sensor'
 import Map from "../../../../layouts/map/m"
 import Swal from "sweetalert2";
+import auth from "utilis/auth"
 
-function ComplexCard({ color }) {
+function ComplexCard(props) {
+  let color = props.color
   const navigate = useNavigate();
   const location = useLocation();
   const handleSetTabValue = (event, newValue) => setTabValue(newValue);
@@ -484,6 +486,14 @@ function ComplexCard({ color }) {
 
   };
 
+  const { user_device } = props.authStore.toJS();
+
+  if (!user_device.device) {
+
+    auth.signOutAndClear();
+    navigate("/authentication/sign-in")
+    return false
+  };
 
   return (
     <DashboardLayout>
@@ -609,7 +619,7 @@ function ComplexCard({ color }) {
                 >
                   <EditModalSensor sensor={sensorDetail} callback={handleCallbackModalSensor} sensorIndex={sensorId} />
                 </Modal>
-                <MDButton variant="gradient" color="success" fullWidth onClick={() => handleSensors(location.state.sensors)} >
+                <MDButton variant="gradient" color="success" fullWidth onClick={() => handleSensors(sensorState)} >
                   กราฟแสดงข้อมูลของ sensors
                 </MDButton>
               </AccordionDetails>
@@ -687,7 +697,7 @@ function ComplexCard({ color }) {
                       ส่งคำสั่ง
                     </MDButton>
                   </MDBox>
-                  <MDButton variant="gradient" color="success" fullWidth onClick={() => handleReport(location.state.relays)} >
+                  <MDButton variant="gradient" color="success" fullWidth onClick={() => handleReport(relayState)} >
                     กราฟแสดงข้อมูลของ Relay
                   </MDButton>
                 </>
@@ -716,4 +726,4 @@ function ComplexCard({ color }) {
 
 // Typechecking props for the ComplexCard
 
-export default inject("relayStore")(observer(ComplexCard));
+export default inject("relayStore", "authStore")(observer(ComplexCard));

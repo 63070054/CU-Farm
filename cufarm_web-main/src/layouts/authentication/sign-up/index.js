@@ -84,7 +84,7 @@ function Cover(props) {
       navigate("/authentication/sign-in")
 
     } else {
-      await Swal.fire("Error", res || "", "error");
+      await Swal.fire("Error", res, "error");
     }
   };
 

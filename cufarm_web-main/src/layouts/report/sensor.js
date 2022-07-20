@@ -18,7 +18,7 @@ import Grid from "@mui/material/Grid";
 
 // Material Dashboard 2 React components
 import MDBox from "components/MDBox";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ReactApexChart from 'react-apexcharts'
 import { observer, inject } from "mobx-react";
 
@@ -39,12 +39,15 @@ import _ from 'lodash';
 import axios from "axios";
 import config from '../../config/config'
 //import { InfluxChart } from "./Influx";
+import auth from "../../utilis/auth"
+
 
 // Dashboard components
 import Projects from "layouts/dashboard/components/Projects";
 import OrdersOverview from "layouts/dashboard/components/OrdersOverview";
 
 function ReportSensor(props) {
+  const navigate = useNavigate();
   const location = useLocation();
   const [relayOption, setRelayOption] = useState({
     options: {
@@ -60,10 +63,6 @@ function ReportSensor(props) {
       },
       stroke: {
         curve: 'smooth'
-      },
-      title: {
-        text: 'Product Trends by Month',
-        align: 'left'
       },
       grid: {
         row: {
@@ -82,8 +81,9 @@ function ReportSensor(props) {
 
 
   useEffect(async () => {
-    await props.deviceStore.getGraphDetailed(location.state.sensor[0].device_id)
-    console.log(sensors)
+    if (location.state.sensor[0]) {
+      await props.deviceStore.getGraphDetailed(location.state.sensor[0].device_id)
+    }
   }, []);
 
 
@@ -109,11 +109,24 @@ function ReportSensor(props) {
     //   }]
     // )
   }
+
+  const { user_device } = props.authStore.toJS();
+
+  if (!user_device.device) {
+
+    auth.signOutAndClear();
+    navigate("/authentication/sign-in")
+    return false
+  };
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
       {location.state.sensor.map((sensor, index) => (
-        <ReactApexChart key={index} options={relayOption.options} series={generateRelay(sensor.param)} type="line" height={350} />
+        <>
+          <h3>{sensor.param}</h3>
+          <ReactApexChart key={index} options={relayOption.options} title={'wave'} series={generateRelay(sensor.param)} type="line" height={350} />
+        </>
       ))
       }
     </DashboardLayout>
@@ -122,4 +135,4 @@ function ReportSensor(props) {
 
 }
 
-export default inject("deviceStore")(observer(ReportSensor));
+export default inject("deviceStore", "authStore")(observer(ReportSensor));

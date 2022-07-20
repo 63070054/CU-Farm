@@ -103,9 +103,10 @@ function Dashboard(props) {
 
 
   const { relay_auto } = props.relayStore.toJS();
-  const { user_device } = props.authStore.toJS();
   const { model_soil } = props.modelSoilStore.toJS();
   const { listDevice } = props.deviceStore.toJS();
+
+  const { user_device } = props.authStore.toJS();
 
   if (!user_device.device) {
 

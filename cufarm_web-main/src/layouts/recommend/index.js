@@ -4,10 +4,13 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import MDButton from "components/MDButton";
 import { observer, inject } from 'mobx-react';
+import auth from "../../utilis/auth"
+import { useNavigate } from "react-router-dom";
 import "./rec.css";
 
-function Recommend() {
+function Recommend(props) {
   // State to store parsed data
+  const navigate = useNavigate()
   const [parsedData, setParsedData] = useState([]);
 
   //State to store table Column name
@@ -48,6 +51,15 @@ function Recommend() {
     props.modelSoilStore.setModelSoil(values)
   }
 
+  const { user_device } = props.authStore.toJS();
+
+  if (!user_device.device) {
+
+    auth.signOutAndClear();
+    navigate("/authentication/sign-in")
+    return false
+  };
+
   return (
     <DashboardLayout>
       <DashboardNavbar></DashboardNavbar>
@@ -63,11 +75,11 @@ function Recommend() {
         <br />
         <br />
         {/* Table */}
-        <table class="table">
+        <table className="table">
           <thead>
             <tr>
               {tableRows.map((rows, index) => {
-                return <th class="th" key={index}>{rows}</th>;
+                return <th className="th" key={index}>{rows}</th>;
               })}
             </tr>
           </thead>
@@ -76,7 +88,7 @@ function Recommend() {
               return (
                 <tr key={index}>
                   {value.map((val, i) => {
-                    return <td class="td" key={i}>{val}</td>;
+                    return <td className="td" key={i}>{val}</td>;
                   })}
                 </tr>
               );
@@ -99,4 +111,4 @@ function Recommend() {
   );
 }
 
-export default inject("modelSoilStore")(observer(Recommend));
+export default inject("modelSoilStore", "authStore")(observer(Recommend));

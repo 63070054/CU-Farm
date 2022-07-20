@@ -61,12 +61,13 @@ function Basic(props) {
   };
 
   const handleLogin = async () => {
-    const response  = await props.authStore.login();
+    const response = await props.authStore.login();
+    console.log(response)
 
     if (response.status === 200) {
       navigate("/dashboard")
     } else {
-      await Swal.fire("Error", "ไม่พบผู้ใช้งานนี้", "error");
+      await Swal.fire("Error", response, "error");
     }
   };
 

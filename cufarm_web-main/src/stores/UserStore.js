@@ -152,10 +152,20 @@ export class UserStore extends BaseStore {
       const response = await axios.post(`${config.backendUrl}/register`, toJS(this.data));
 
       if (response.status === 200) {
+        this.data = {
+          user: "",
+          birth: "",
+          name: "",
+          address: "",
+          email: "",
+          tel: "",
+          ID: "",
+          password: "",
+        }
         return response;
       }
     } catch (err) {
-      return err?.response?.data?.message;
+      return err.response.data.msg;
     } finally {
       this.setLoading(false);
     }

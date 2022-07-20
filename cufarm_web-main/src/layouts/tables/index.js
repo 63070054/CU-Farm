@@ -71,8 +71,8 @@ function Tables(props) {
   );
 
   const handleDashboard = (user) => {
-   
-    navigate("/dashboardUser", { state: user})
+
+    navigate("/dashboardUser", { state: user })
   };
 
   const { user_device } = props.authStore.toJS();
